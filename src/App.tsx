@@ -1,25 +1,42 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Route, Routes } from 'react-router-dom';
+import styled from 'styled-components';
+
+import { useGetArticlesQuery } from './services/articles';
+import { useGetProductsQuery } from './services/products';
+import ProductsPage from './components/products/ProductsPage/ProductsPage';
+import CreateSalePage from './components/sales/CreateSalePage/CreateSalePage';
+
+const StyledApp = styled.div`
+  font-family: sans-serif;
+  
+  a {
+    color: inherit;
+    text-decoration: inherit;
+  }
+  
+  a:hover {
+    color: aquamarine;
+  }
+`;
 
 function App() {
+  const articlesQuery = useGetArticlesQuery();
+  const productsQuery = useGetProductsQuery();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <StyledApp>
+      {
+        articlesQuery.isSuccess && productsQuery.isSuccess
+          ? (
+            <Routes>
+              <Route path="/" element={<ProductsPage />} />
+              <Route path="/newSale" element={<CreateSalePage />} />
+            </Routes>
+          )
+          : <span>Loading...</span>
+      }
+    </StyledApp>
   );
 }
 
